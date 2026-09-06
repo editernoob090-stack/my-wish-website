@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make Ur Wish True</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-color: #1e293b;
+            --accent-color: #a855f7;
+            --text-color: #f8fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            background: var(--card-color);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            margin-top: 40px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+            font-weight: 800;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        textarea {
+            resize: vertical;
+            height: 80px;
+        }
+
+        .steps-box {
+            background-color: #0f172a;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            text-align: left;
+            border-radius: 0 8px 8px 0;
+            margin: 30px 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .steps-box p {
+            margin: 0 0 8px 0;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .steps-box ol {
+            margin: 0;
+            padding-left: 20px;
+            color: #94a3b8;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Wishes Portal Section */
+        .admin-trigger {
+            margin-top: 40px;
+            background: none;
+            border: 1px solid #334155;
+            color: #64748b;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            width: auto;
+            border-radius: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--card-color);
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .wish-item {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            text-align: left;
+            border-bottom: 2px solid #334155;
+        }
+
+        .wish-item strong { color: var(--accent-color); }
+        
+        .close-btn {
+            background-color: #64748b;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Title -->
+        <h1>Make Ur Wish True</h1>
+
+        <!-- Inputs Form -->
+        <div class="input-group">
+            <label for="userName">Name:</label>
+            <input type="text" id="userName" placeholder="Enter your name...">
+        </div>
+
+        <div class="input-group">
+            <label for="userWish">Your Wish:</label>
+            <textarea id="userWish" placeholder="Enter your wish..."></textarea>
+        </div>
+
+        <!-- Instructions Section -->
+        <div class="steps-box">
+            <p>Steps to make your wish true:</p>
+            <ol>
+                <li>Enter your name</li>
+                <li>Enter your wish like: <em>I want to be first</em> or <em>I want "name of a person" to be my gf/bf</em></li>
+                <li>Submit</li>
+            </ol>
+        </div>
+
+        <!-- Submit Button -->
+        <button onclick="submitWish()">Submit</button>
+
+        <!-- Hidden Secret Wishes Button -->
+        <button class="admin-trigger" onclick="openAuthModal()">Wishes</button>
+    </div>
+
+    <!-- Auth Modal (Asks for 1000 digit code) -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <h2 style="color: var(--accent-color); margin-top: 0;">Access Portal</h2>
+            <div class="input-group">
+                <label for="secretCode">Code:</label>
+                <input type="password" id="secretCode" placeholder="Enter 1000 digit code">
+            </div>
+            <button onclick="verifyCode()">Access Database</button>
+            <button class="close-btn" onclick="closeModal('authModal')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Wishes List Modal (Shows entries saved) -->
+    <div id="wishesModal" class="modal">
+        <div class="modal-content" style="max-height: 80vh; overflow-y: auto;">
+            <h2 style="color: var(--accent-color); margin-top: 0;">Submitted Wishes</h2>
+            <div id="wishesContainer">
+                <!-- Wishes loop here -->
+            </div>
+            <button class="close-btn" onclick="closeModal('wishesModal')">Close Panel</button>
+        </div>
+    </div>
+
+    <script>
+        // Array to save data locally inside the browser memory
+        let localWishesList = JSON.parse(localStorage.getItem('userWishes')) || [];
+
+        function submitWish() {
+            const nameInput = document.getElementById('userName').value.trim();
+            const wishInput = document.getElementById('userWish').value.trim();
+
+            if (!nameInput || !wishInput) {
+                alert("Please fill out both your Name and your Wish box!");
+                return;
+            }
+
+            // Save data object
+            const wishData = {
+                name: nameInput,
+                wish: wishInput,
+                time: new Date().toLocaleTimeString()
+            };
+
+            localWishesList.push(wishData);
+            localStorage.setItem('userWishes', JSON.stringify(localWishesList));
+
+            alert("Your wish has been securely locked into the universe! ✨");
+            
+            // Clear inputs
+            document.getElementById('userName').value = '';
+            document.getElementById('userWish').value = '';
+        }
+
+        function openAuthModal() {
+            document.getElementById('secretCode').value = '';
+            document.getElementById('authModal').style.display = 'flex';
+        }
+
+        function verifyCode() {
+            const codeInput = document.getElementById('secretCode').value;
+            
+            if (codeInput === "1111") {
+                closeModal('authModal');
+                openWishesPanel();
+            } else {
+                alert("Incorrect code! Access Denied.");
+            }
+        }
+
+        function openWishesPanel() {
+            const container = document.getElementById('wishesContainer');
+            container.innerHTML = '';
+
+            if (localWishesList.length === 0) {
+                container.innerHTML = '<p style="color: #64748b;">No wishes have been submitted yet.</p>';
+            } else {
+                localWishesList.forEach((item, index) => {
+                    container.innerHTML += `
+                        <div class="wish-item">
+                            <div><strong>#${index + 1} Name:</strong> ${escapeHtml(item.name)}</div>
+                            <div style="margin-top: 5px;"><strong>Wish:</strong> ${escapeHtml(item.wish)}</div>
+                            <div style="font-size: 0.75rem; color: #64748b; margin-top: 8px; text-align: right;">${item.time}</div>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('wishesModal').style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // Helper function to stop text scripting vulnerabilities 
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+  </html>
+  
